@@ -83,39 +83,47 @@ TrelloPowerUp.initialize({
     }];
   },
 
-  'card-badges': async function(t) {
-    const targetListId  = await t.get('board', 'shared', BOARD_KEY_ID);
+  'card-badges': function (t) {
+    return [{
+      dynamic: async function () {
+        const targetListId = await t.get('board', 'shared', BOARD_KEY_ID);
+        if (!targetListId) return { text: '⏱ Selecione a Lista', color: 'grey', refresh: 300 };
+        
+        const card = await t.card('id', 'idList');
 
-    if (!targetListId) return [{ text: '⏱ Selecione a Lista', color: 'grey', refresh: 300 }];
-    
-    const card          = await t.card('id', 'idList');
+        if (card.idList === targetListId) {
+          let enteredAt = await t.get('card', 'shared', CARD_KEY_ENTER);
+          if (!enteredAt) {
+            enteredAt = Date.now();
+            await t.set('card', 'shared', CARD_KEY_ENTER, enteredAt);
+          }
+          return makeAgeBadge(new Date(enteredAt), '⏱ ');
+        }
 
-    if (card.idList === targetListId) {
-      let enteredAt = await t.get('card', 'shared', CARD_KEY_ENTER);
-      if (!enteredAt) {
-        enteredAt = Date.now();
-        await t.set('card', 'shared', CARD_KEY_ENTER, enteredAt);
+        const prev = await t.get('card', 'shared', CARD_KEY_ENTER);
+        if (prev) await t.remove('card', 'shared', CARD_KEY_ENTER);
+        return null;
       }
-      return [ makeAgeBadge(new Date(enteredAt), '⏱ ') ];
-    } else {
-      const prev          = await t.get('card', 'shared', CARD_KEY_ENTER);
-      if (prev) await t.remove('card', 'shared', CARD_KEY_ENTER);
-      return [];
-    }
+    }];
   },
 
-  'card-detail-badges': async function(t) {
-    const targetListId    = await t.get('board', 'shared', BOARD_KEY_ID);
-    if (!targetListId) return [];
+  'card-detail-badges': function (t) {
+    return [{
+      dynamic: async function () {
+        const targetListId = await t.get('board', 'shared', BOARD_KEY_ID);
+        if (!targetListId) return null;
 
-    const card = await t.card('id', 'idList');
-    if (card.idList !== targetListId) return [];
+        const card = await t.card('id', 'idList');
+        if (card.idList !== targetListId) return null;
 
-    let enteredAt         = await t.get('card', 'shared', CARD_KEY_ENTER);
-    if (!enteredAt) {
-      enteredAt = Date.now();
-      await t.set('card', 'shared', CARD_KEY_ENTER, enteredAt);
-    }
-    return [ makeAgeBadge(new Date(enteredAt), '⏱ Iniciou') ];
-  }
+        let enteredAt = await t.get('card', 'shared', CARD_KEY_ENTER);
+        if (!enteredAt) {
+          enteredAt = Date.now();
+          await t.set('card', 'shared', CARD_KEY_ENTER, enteredAt);
+        }
+        return makeAgeBadge(new Date(enteredAt), '⏱ Iniciou ');
+      }
+    }];
+  },
+
 });
