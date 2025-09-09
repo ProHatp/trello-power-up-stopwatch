@@ -1,0 +1,30 @@
+{
+  "name": "Card Age Timer",
+  "details": "Mostra há quanto tempo o card foi criado, como um cronômetro.",
+  "icon": {
+    "url": "https://www.designerimperius.com//icon.png"
+  },
+  "author": "ProHat",
+  "capabilities": [
+    "card-badges",
+    "card-detail-badges"
+    ],
+  "connectors": {
+    "iframe": {
+    "url": "https://www.designerimperius.com//index.html"
+    }
+  },
+  "permissions": {
+    "board": {
+    "read": ["id", "name"],
+    "write": []
+  },
+  "card": {
+    "read": ["id", "name"],
+    "write": []
+  }
+  },
+  "domains": [
+    "designerimperius.com"
+  ]
+}
