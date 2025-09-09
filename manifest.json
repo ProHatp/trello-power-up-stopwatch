@@ -2,7 +2,7 @@
   "name": "Card Age Timer",
   "details": "Mostra há quanto tempo o card foi criado, como um cronômetro.",
   "icon": {
-    "url": "https://www.designerimperius.com//icon.png"
+    "url": "https://prohatp.github.io/trello-power-up-stopwatch/icon.png"
   },
   "author": "ProHat",
   "capabilities": [
@@ -11,7 +11,7 @@
     ],
   "connectors": {
     "iframe": {
-    "url": "https://www.designerimperius.com//index.html"
+    "url": "https://prohatp.github.io/trello-power-up-stopwatch/index.html"
     }
   },
   "permissions": {
