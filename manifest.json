@@ -1,30 +1,23 @@
 {
-  "name": "Card Age Timer",
-  "details": "Mostra há quanto tempo o card foi criado, como um cronômetro.",
+  "name": "Card Timer por Lista",
+  "details": "Cronômetro desde que o card entrou em uma lista escolhida.",
   "icon": {
     "url": "https://prohatp.github.io/trello-power-up-stopwatch/icon.png"
   },
   "author": "ProHat",
   "capabilities": [
+    "board-buttons",
     "card-badges",
     "card-detail-badges"
-    ],
+  ],
   "connectors": {
     "iframe": {
-    "url": "https://prohatp.github.io/trello-power-up-stopwatch/index.html"
+      "url": "https://prohatp.github.io/trello-power-up-stopwatch/index.html"
     }
   },
   "permissions": {
-    "board": {
-    "read": ["id", "name"],
-    "write": []
+    "board": { "read": ["id", "name"], "write": [] },
+    "card":  { "read": ["id", "name", "idList"], "write": [] }
   },
-  "card": {
-    "read": ["id", "name"],
-    "write": []
-  }
-  },
-  "domains": [
-    "designerimperius.com"
-  ]
+  "domains": [ "designerimperius.com" ]
 }
