@@ -2,7 +2,7 @@
   "name": "Card Timer por Lista",
   "details": "Cronômetro desde que o card entrou em uma lista escolhida.",
   "icon": {
-    "url": "https://prohatp.github.io/trello-power-up-stopwatch/icon.png"
+    "url": "https://prohatp.github.io/trello-power-up-stopwatch/icon-timer.svg"
   },
   "author": "ProHat",
   "capabilities": [

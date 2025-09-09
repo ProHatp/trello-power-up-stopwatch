@@ -1,6 +1,13 @@
 const BOARD_KEY_ID            = 'timerTargetListId';
 const BOARD_KEY_NAME          = 'timerTargetListName';
 const CARD_KEY_ENTER          = 'timerEnteredAtMs';
+const ICON_URL                = 'https://prohatp.github.io/trello-power-up-stopwatch/icon-timer.svg';
+
+function nextMinuteRefreshSeconds(minFloor = 1, maxCeil = 60) {
+  const now           = new Date();
+  const secs          = 60 - now.getSeconds();
+  return Math.max(minFloor, Math.min(maxCeil, secs));
+}
 
 function formatDuration(ms) {
   const totalMin      = Math.max(0, Math.floor(ms / 60000));
@@ -30,7 +37,7 @@ function makeAgeBadge(dt, labelPrefix = '⏱') {
     text: `${labelPrefix} ${formatDuration(diff)}`,
     color: colorByHours(hours),
     tooltip: `Desde ${dt.toLocaleString()}`,
-    refresh: 60
+    refresh: nextMinuteRefreshSeconds()
   };
 }
 
@@ -47,7 +54,7 @@ async function openListPicker(t) {
 
   items.push({ separator: true });
   items.push({
-    text: 'Remover configuração',
+    text: 'Remover Configuração',
     callback: async (t2) => {
       await t2.remove('board', 'shared', BOARD_KEY_ID);
       await t2.remove('board', 'shared', BOARD_KEY_NAME);
@@ -67,32 +74,30 @@ TrelloPowerUp.initialize({
       t.get('board', 'shared', BOARD_KEY_ID),
       t.get('board', 'shared', BOARD_KEY_NAME)
     ]);
-    const label = listId ? `Cronômetro: ${listName}` : 'Cronômetro: definir lista';
+    const label = listId ? `Cronômetro: ${listName}` : 'Cronômetro: Definir Lista';
     return [{
       text: label,
-      icon: null,
+      icon: ICON_URL,
+      condition: 'always',
       callback: (t2) => openListPicker(t2)
     }];
   },
 
   'card-badges': async function(t) {
-    const targetListId = await t.get('board', 'shared', BOARD_KEY_ID);
-    if (!targetListId) {
-      return [{ text: '⏱ selecione a lista', color: 'grey', refresh: 300 }];
-    }
+    const targetListId  = await t.get('board', 'shared', BOARD_KEY_ID);
 
-    const card = await t.card('id', 'idList');
+    if (!targetListId) return [{ text: '⏱ Selecione a Lista', color: 'grey', refresh: 300 }];
+    
+    const card          = await t.card('id', 'idList');
 
     if (card.idList === targetListId) {
       let enteredAt = await t.get('card', 'shared', CARD_KEY_ENTER);
       if (!enteredAt) {
-
         enteredAt = Date.now();
         await t.set('card', 'shared', CARD_KEY_ENTER, enteredAt);
       }
-      return [ makeAgeBadge(new Date(enteredAt), '⏱ Lista') ];
+      return [ makeAgeBadge(new Date(enteredAt), '⏱ ') ];
     } else {
-
       const prev          = await t.get('card', 'shared', CARD_KEY_ENTER);
       if (prev) await t.remove('card', 'shared', CARD_KEY_ENTER);
       return [];
@@ -111,6 +116,6 @@ TrelloPowerUp.initialize({
       enteredAt = Date.now();
       await t.set('card', 'shared', CARD_KEY_ENTER, enteredAt);
     }
-    return [ makeAgeBadge(new Date(enteredAt), '⏱ Na lista') ];
+    return [ makeAgeBadge(new Date(enteredAt), '⏱ Iniciou') ];
   }
 });
